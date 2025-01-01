@@ -1,7 +1,7 @@
 # Stackoverflow-Scraper
-Stackoverflow is a very popular website for all common questions in programming, coding tips, shared knowledge. If you have a look at many common questions when you start to learn about a subject, that may reduce your time when you deploy the project later.
+Stack Overflow is a very popular website for all common questions in programming, coding tips, shared knowledge. If you have a look at many common questions when you start to learn about a subject, that may reduce your time when you deploy the project later.
 
-This script will scrape the questions on stackoverflow and sort base on the number of votes. The user can scrape multiple tags or one tag and it will output a file csv contain all info about the questions relate to these tags.
+This script will scrape the questions on Stack Overflow and sort base on the number of votes. The user can scrape multiple tags or one tag and it will output a file CSV contain all info about the scraped questions.
 # How to use:
 Clone the repository and navigate to stackoverflow-scraper dir:
 ```
@@ -19,9 +19,12 @@ If you want to use virtual env, follow these steps:
   2. Activate the venv:
 
   - For WindowPowerShell terminal:
+
   ```
   .\venv\Scripts\activate.ps1
   ```
+> [!NOTE]
+> If you can not excute the script, it may dueto you still not change the excution policy. Reference [about_Execution_Policies](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-7.4) to know more.
   - Or Bash terminal:
   ```
   source venv/bin/activate
