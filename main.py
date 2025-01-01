@@ -17,8 +17,6 @@ if __name__ == '__main__':
     # Get all the questions follow up the number of votes
     my_df = utils.extract_all_page(tag=tag, page_nums=pages)
     # Save file
-
-
     filename, filepath = utils.get_file_name(tag, pages)
     my_df.to_csv(filename)
     print(my_df)
