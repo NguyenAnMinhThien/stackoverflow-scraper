@@ -21,7 +21,7 @@ if __name__ == '__main__':
     filename, filepath = utils.get_file_name(tag, pages)
     if os.name == "nt":
         # window
-        my_df.to_csv(f".\output\\{filename}")
+        my_df.to_csv(f".\\output\\{filename}")
     else:
         # other
         my_df.to_csv(f"./output/{filename}")
