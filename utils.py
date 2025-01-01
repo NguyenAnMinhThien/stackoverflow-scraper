@@ -74,8 +74,8 @@ def get_file_name(tag, page_num):
     filename = f"{search_tag}-{page_num}p.csv"
     if os.name == "nt":
         # window
-        filepath = os.getcwd() + "\\" + filename
+        filepath = os.getcwd() + "\\output\\" + filename
     else:
         # other
-        filepath = os.getcwd() + "/" + filename
+        filepath = os.getcwd() + "/output/" + filename
     return filename, filepath

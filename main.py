@@ -1,5 +1,6 @@
 import sys
 import utils
+import os
 
 
 def welcome():
@@ -18,6 +19,12 @@ if __name__ == '__main__':
     my_df = utils.extract_all_page(tag=tag, page_nums=pages)
     # Save file
     filename, filepath = utils.get_file_name(tag, pages)
-    my_df.to_csv(filename)
+    if os.name == "nt":
+        # window
+        my_df.to_csv(f".\output\\{filename}")
+    else:
+        # other
+        my_df.to_csv(f"./output/{filename}")
+
     print(my_df)
     print(f"The file has been saved at: \n{filepath}")
