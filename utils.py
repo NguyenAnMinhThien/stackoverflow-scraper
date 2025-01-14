@@ -7,15 +7,9 @@ import os
 
 session = requests.Session()
 
-
-def get_url(tag, page_num):
-    tags = tag.split(" ")
-    tags = [x.strip() for x in tags]
-    if tags.__len__() > 1:
-        search_tag = str.join("%2b", tags)
-    else:
-        search_tag = tags[0]
-    url = f"https://stackoverflow.com/questions/tagged/{search_tag}?tab=votes&page={page_num}&pagesize=50"
+# https://olr.gdc-uk.org/SearchRegister/SearchResult?RegistrationNumber={registeration_num}
+def get_url(registeration_num ):
+    url = f"https://olr.gdc-uk.org/SearchRegister/SearchResult?RegistrationNumber={registeration_num}"
     return url
 
 
@@ -31,47 +25,40 @@ def load_page(url):
         print("Something wrong.", e)
 
 
-def extract_page(tag, page_num):
-    url = get_url(tag, page_num)
+def extract_page(registeration_num):
+    url = get_url(registeration_num)
     r = load_page(url)
 
     try:
         soup = BeautifulSoup(r.content, features="html.parser")
-        my_df = pandas.DataFrame(columns=['Votes', 'Title', 'Summary'])
-        contents = soup.find_all("div", class_="s-post-summary js-post-summary")
+        my_df = pandas.DataFrame()
+        contents = soup.find_all("div", class_="card-header")
+        contents_body = soup.find_all("div", class_="col-md-4 font-weight-bold")
+        contents_result = soup.find_all("div", class_="col-md-6 col-sm-10")
         if contents == []:
-            sys.exit(
-                f"Please check again your tag name. The tag '{tag}' is not exist.\nCheck the following URL:\nhttps://stackoverflow.com/tags")
-        for content in contents:
-            vote = (content.find("span", class_="s-post-summary--stats-item-number").get_text().strip())
-            title = (content.find("h3", class_="s-post-summary--content-title").get_text().strip())
-            summary = (content.find("div", class_="s-post-summary--content-excerpt").get_text().strip())
-            if vote == "" or title == "" or summary == "":
-                sys.exit(f"The page html has change element structure.")
-            dftemp = pandas.DataFrame({'Votes': [vote], 'Title': [title], 'Summary': [summary]})
-            my_df = my_df._append(dftemp, ignore_index=True)
+            pass
+        for name in contents[0].get_text().split("\n"):
+            if name.strip() != "":
+                Name = name.strip()
+                break
+        Registration_number = (contents_result[0].get_text().strip())
+        First_registered_on = (contents_result[1].get_text().strip())
+        dftemp = pandas.DataFrame({'Name': [Name], 'Registration_number': [Registration_number], 'First_registered_on': [First_registered_on]})
+        # not use _append anymore
+        my_df = pandas.concat([my_df,dftemp])
     except Exception as e:
         print("Something wrong: ", e)
     else:
         return my_df
 
-
-def extract_all_page(tag, page_nums):
-    my_df = pandas.DataFrame()
-    for page in range(1, int(page_nums) + 1):
-        df = extract_page(tag=tag, page_num=page)
-        my_df = my_df._append(df, ignore_index=True)
-    return my_df
-
-
-def get_file_name(tag, page_num):
-    tags = tag.split(" ")
-    tags = [x.strip() for x in tags]
-    if tags.__len__() > 1:
-        search_tag = str.join("-", tags)
-    else:
-        search_tag = tags[0]
-    filename = f"{search_tag}-{page_num}p.csv"
+def extract_all_page():
+    dftemps = pandas.DataFrame()
+    for i in range(79800,79900):
+        dftemp = extract_page(i)
+        dftemps = dftemps._append(dftemp,sort = False)
+    return dftemps
+def get_file_name():
+    filename = f"Output.csv"
     if os.name == "nt":
         # window
         filepath = os.getcwd() + "\\output\\" + filename
@@ -79,3 +66,5 @@ def get_file_name(tag, page_num):
         # other
         filepath = os.getcwd() + "/output/" + filename
     return filename, filepath
+
+extract_page(79801)
